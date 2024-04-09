@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: flight_booking_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: flight_booking
+      MYSQL_USER: root
+      MYSQL_PASSWORD: flight@12#
+    ports:
+      - "3306:3306"
+
+  backend:
+    build: ./backend
+    container_name: backend-container
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: flight@12#
+      DB_NAME: flight_booking
+
+  frontend:
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+    container_name: frontend-container
+    ports:
+      - "80:80"

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Booking</title>
+</head>
+<body>
+    <h1>Flight Booking</h1>
+
+    <h2>Search Flights</h2>
+    <form id="searchForm">
+        <label for="departure_location">Departure Location:</label>
+        <input type="text" id="departure_location" name="departure_location" required><br>
+
+        <label for="arrival_location">Arrival Location:</label>
+        <input type="text" id="arrival_location" name="arrival_location" required><br>
+
+        <label for="departure_date">Departure Date:</label>
+        <input type="datetime-local" id="departure_date" name="departure_date" required><br>
+
+        <label for="num_passengers">Number of Passengers:</label>
+        <input type="number" id="num_passengers" name="num_passengers" min="1" required><br>
+
+        <button type="submit">Search</button>
+    </form>
+
+    <div id="flights"></div>
+
+    <script>
+        document.getElementById('searchForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            fetch(`/flights?${new URLSearchParams(formData).toString()}`)
+                .then(response => response.json())
+                .then(data => {
+                    const flightsDiv = document.getElementById('flights');
+                    flightsDiv.innerHTML = '';
+                    data.forEach(flight => {
+                        const flightElement = document.createElement('div');
+                        flightElement.textContent = `Flight ID: ${flight.id}, Departure Location: ${flight.departure_location}, Arrival Location: ${flight.arrival_location}, Departure Date: ${flight.departure_date}, Available Seats: ${flight.available_seats}`;
+                        flightsDiv.appendChild(flightElement);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error searching for flights:', error);
+                });
+        });
+    </script>
+</body>
+</html>

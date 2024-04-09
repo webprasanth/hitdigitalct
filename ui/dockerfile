@@ -1,0 +1,11 @@
+# Use the official Nginx image as a base
+FROM nginx:alpine
+
+# Copy the frontend UI files to the Nginx HTML directory
+COPY . /usr/share/nginx/html
+
+# Expose port 80 to the outside world
+EXPOSE 80
+
+# Command to start Nginx
+CMD ["nginx", "-g", "daemon off;"]
